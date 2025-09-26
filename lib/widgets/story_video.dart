@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:flutter/foundation.dart';
 import '../utils.dart';
 import '../controller/story_controller.dart';
 
@@ -90,8 +90,14 @@ class StoryVideoState extends State<StoryVideo> {
 
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
-        this.playerController =
-            VideoPlayerController.file(widget.videoLoader.videoFile!);
+        if(kIsWeb) {
+          this.playerController =
+              VideoPlayerController.networkUrl(Uri.parse(widget.videoLoader.url!));
+        }else {
+          this.playerController =
+              VideoPlayerController.file(widget.videoLoader.videoFile!);
+        }
+
 
         playerController!.initialize().then((v) {
           setState(() {});
