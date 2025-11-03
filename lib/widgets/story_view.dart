@@ -187,6 +187,16 @@ class StoryItem {
             color: Colors.black,
             child: Stack(
               children: <Widget>[
+
+
+                StoryImage.url(
+                  url,
+                  controller: controller,
+                  fit: imageFit,
+                  requestHeaders: requestHeaders,
+                  loadingWidget: loadingWidget,
+                  errorWidget: errorWidget,
+                ),
                 Positioned(
                   top: 0,
                   left: 0,
@@ -212,15 +222,6 @@ class StoryItem {
                       ),
                     ),
                   ),
-                ),
-
-                StoryImage.url(
-                  url,
-                  controller: controller,
-                  fit: imageFit,
-                  requestHeaders: requestHeaders,
-                  loadingWidget: loadingWidget,
-                  errorWidget: errorWidget,
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 16),
