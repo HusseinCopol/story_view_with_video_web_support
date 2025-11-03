@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
@@ -174,6 +175,9 @@ class StoryItem {
     EdgeInsetsGeometry? captionOuterPadding,
     Duration? duration,
   }) {
+    const double kBlurTopHeight = 40; // how tall the blurred band is
+    const double kBlurSigma = 18;      // blur strength
+
     return StoryItem(
       ClipRRect(
         key: key,
@@ -183,6 +187,33 @@ class StoryItem {
             color: Colors.black,
             child: Stack(
               children: <Widget>[
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: kBlurTopHeight , // include status bar if fullscreen
+                  child: ClipRect( // IMPORTANT: confine blur area
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: kBlurSigma, sigmaY: kBlurSigma),
+                      child: Container(
+                        // semi-transparent gradient so text/icons pop
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black.withOpacity(0.30), // more tint at very top
+                              Colors.black.withOpacity(0.10), // fade out
+                              Colors.transparent,
+                            ],
+                            stops: const [0.0, 0.6, 1.0],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
                 StoryImage.url(
                   url,
                   controller: controller,
